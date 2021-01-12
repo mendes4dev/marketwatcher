@@ -1,0 +1,42 @@
+import 'bootstrap/dist/css/bootstrap.css';
+import styles from './Home.module.css';
+import { useEffect, useState } from "react";
+
+export default function Home() {
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+  
+  useEffect(() => {
+    alert(formatDate(Date.now() - 86400000));
+    fetch("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=TLRY&apikey=IDY3SC7RCQOA1AHP", {
+      "method": "GET",
+      "headers":{
+        'Content-type':'application/json'
+      }
+    })
+    .then(response => {
+    	response.json().then(function(data) {
+        console.log(data['Time Series (Daily)']['2021-01-11']);
+      });
+    })
+    .catch(err => {
+    	console.error(err);
+    });
+    });
+  return (
+    <div className="container-fluid" style={{marginTop:"1%"}}>
+      <h1 className={styles.fonted}>Market Watcher</h1>
+    </div>
+  )
+}
